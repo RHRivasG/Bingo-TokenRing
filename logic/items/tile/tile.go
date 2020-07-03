@@ -1,8 +1,8 @@
 package tile
 
+//Tile .
 type Tile struct {
-	Letter       string
-	Number       int
-	taken        bool
-	neighborhood *Octagon
+	Letter string
+	Number int
+	taken  bool
 }

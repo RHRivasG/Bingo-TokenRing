@@ -9,8 +9,8 @@ type Blower struct {
 	Balls []Ball
 }
 
-//New .
-func New() Blower {
+//NewBlower .
+func NewBlower() Blower {
 	vingu := []string{"V", "I", "N", "G", "U"}
 	var balls []Ball
 	for i, letter := range vingu {
