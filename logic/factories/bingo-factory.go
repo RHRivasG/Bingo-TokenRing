@@ -1,1 +1,4 @@
 package factories
+
+func BingoFactory() {
+}
