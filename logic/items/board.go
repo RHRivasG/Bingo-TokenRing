@@ -59,6 +59,11 @@ func (board *Board) SeeNumberInColumn(column int, row int, n int) int {
 	return -1
 }
 
+//Check .
+func (board *Board) Check() {
+
+}
+
 //Random min <= n < max
 func Random(min int, max int) int {
 	s := rand.NewSource(time.Now().UnixNano())
