@@ -8,14 +8,14 @@ import (
 
 //Board .
 type Board struct {
-	Name  string
-	Tiles [5][5]Tile
+	Name  string     `json:"name"`
+	Tiles [5][5]Tile `json:"tiles"`
 }
 
 // NewBoard .
-func NewBoard() Board {
+func NewBoard(name string) Board {
 	var board Board
-	board.Name = "A"
+	board.Name = name
 	vingu := []string{"V", "I", "N", "G", "U"}
 	for i, letter := range vingu {
 		for j := 0; j < 5; j++ {
@@ -59,9 +59,20 @@ func (board *Board) SeeNumberInColumn(column int, row int, n int) int {
 	return -1
 }
 
-//Check .
-func (board *Board) Check() {
-
+//CheckBoardLine .
+func (board *Board) CheckBoardLine(row int, column int) bool {
+	if board.CheckColumn(column, 4) {
+		return true
+	} else if board.CheckRow(4, row) {
+		return true
+	} else if board.CheckDiagonalPrincipal(4, 4) {
+		return true
+	} else if board.CheckDiagonalSecondary(0, 4) {
+		return true
+	} else if board.CheckSpecial() {
+		return true
+	}
+	return false
 }
 
 //Random min <= n < max

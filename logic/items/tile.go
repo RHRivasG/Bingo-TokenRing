@@ -2,7 +2,7 @@ package items
 
 //Tile .
 type Tile struct {
-	Letter string
-	Number int
-	Taken  bool
+	Letter string `json:"letter"`
+	Number int    `json:"number"`
+	Taken  bool   `json:"taken"`
 }

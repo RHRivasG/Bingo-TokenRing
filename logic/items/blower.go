@@ -6,7 +6,7 @@ import (
 
 //Blower .
 type Blower struct {
-	Balls []Ball
+	Balls []Ball `json:"balls"`
 }
 
 //NewBlower .
