@@ -6,8 +6,8 @@ import (
 
 //Protocol .
 type Protocol struct {
-	l port.Listener
-	w port.Writer
+	L port.Listener
+	W port.Writer
 }
 
 //NewProtocol .
@@ -23,18 +23,23 @@ func NewProtocol(listener string, writer string) (Protocol, error) {
 	return Protocol{l, w}, nil
 }
 
+//Listen .
+func (p *Protocol) Listen() ([]string, error) {
+	return p.L.Listening()
+}
+
 //Converse .
 func (p *Protocol) Converse(message []string) ([]string, error) {
-	p.w.Writing(message)
-	return p.l.Listening()
+	p.W.Writing(message)
+	return p.L.Listening()
 }
 
 //EndConversation .
 func (p *Protocol) EndConversation(lastMessage []string) {
-	p.w.Writing(lastMessage)
+	p.W.Writing(lastMessage)
 }
 
 //GetWriterName .
 func (p *Protocol) GetWriterName() string {
-	return p.w.GetName()
+	return p.W.GetName()
 }

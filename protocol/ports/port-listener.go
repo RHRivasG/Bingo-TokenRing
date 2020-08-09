@@ -8,8 +8,8 @@ import (
 
 //Listener .
 type Listener struct {
-	name string
-	sl   *serial.Port
+	Name string
+	Sl   *serial.Port
 }
 
 //NewListener .
@@ -25,7 +25,7 @@ func NewListener(name string) (Listener, error) {
 //Listening .
 func (l *Listener) Listening() ([]string, error) {
 	buf := make([]byte, 128)
-	n, err := (l.sl).Read(buf)
+	n, err := (l.Sl).Read(buf)
 	if err != nil {
 		return nil, err
 	}

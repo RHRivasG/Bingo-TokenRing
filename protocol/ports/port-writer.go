@@ -6,8 +6,8 @@ import (
 
 //Writer .
 type Writer struct {
-	name string
-	sw   *serial.Port
+	Name string
+	Sw   *serial.Port
 }
 
 //NewWriter .
@@ -22,17 +22,17 @@ func NewWriter(name string) (Writer, error) {
 
 //GetName .
 func (w *Writer) GetName() string {
-	return w.name
+	return w.Name
 }
 
 //GetSerialPort .
 func (w *Writer) GetSerialPort() *serial.Port {
-	return w.sw
+	return w.Sw
 }
 
 //Writing .
 func (w *Writer) Writing(messages []string) {
-	(w.sw).Write([]byte(unite(putLimiter(messages))))
+	(w.Sw).Write([]byte(unite(putLimiter(messages))))
 }
 
 func putLimiter(m []string) []string {
