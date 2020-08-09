@@ -1,0 +1,17 @@
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\bin\Debug\ProyectoBingo.exe.config
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\bin\Debug\ProyectoBingo.exe
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\bin\Debug\ProyectoBingo.pdb
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.csprojAssemblyReference.cache
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\MainWindow.g.cs
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\App.g.cs
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo_MarkupCompile.cache
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo_MarkupCompile.lref
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\MainWindow.baml
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.g.resources
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.Properties.Resources.resources
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.csproj.GenerateResource.cache
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.csproj.CoreCompileInputs.cache
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.exe
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\ProyectoBingo.pdb
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\JuegoBingo.g.cs
+C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\obj\Debug\JuegoBingo.baml

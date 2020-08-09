@@ -1,0 +1,33 @@
+﻿<Window x:Class="ProyectoBingo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProyectoBingo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="400" Background="White">
+    <Grid>
+        <Image Source="C:\Users\jose1\source\repos\ProyectoBingo\ProyectoBingo\LogoBingo.png" Margin="10,47,253.6,207.8"/>
+        <TextBlock HorizontalAlignment="Left" Height="32" Margin="45,10,0,0" TextWrapping="Wrap" Text="Bienvenido a BINGO RS232" VerticalAlignment="Top" Width="266" FontSize="22"/>
+        <Button Content="¡Jugar!" HorizontalAlignment="Left" Height="29" Margin="273,270,0,0" VerticalAlignment="Top" Width="92"  AutomationProperties.IsRowHeader="True" Click="Button_Click"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Usuario:" VerticalAlignment="Top" Margin="145,47,0,0" RenderTransformOrigin="2.906,-1.729"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Localhost" VerticalAlignment="Top" Margin="145,68,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Puerto que lee" VerticalAlignment="Top" Margin="10,138,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Puerto que escribe" VerticalAlignment="Top" Margin="10,163,0,0"/>
+        <TextBox HorizontalAlignment="Left" Height="16" Margin="227,47,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
+        <TextBox HorizontalAlignment="Left" Height="16" Margin="227,70,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
+        <TextBox HorizontalAlignment="Left" Height="16" Margin="132,137,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65" />
+        <TextBox HorizontalAlignment="Left" Height="16" Margin="132,163,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Número de tableros" VerticalAlignment="Top" Margin="10,196,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Modo de juego" VerticalAlignment="Top" Margin="10,240,0,0"/>
+        <ComboBox HorizontalAlignment="Left" Margin="132,196,0,0" VerticalAlignment="Top" Width="99" >
+            <ComboBoxItem Content="Un cartón"/>
+            <ComboBoxItem Content="Dos cartones"/>
+        </ComboBox>
+        <ComboBox HorizontalAlignment="Left" Margin="132,240,0,0" VerticalAlignment="Top" Width="99" >
+            <ComboBoxItem Content="Completo"/>
+            <ComboBoxItem Content="Lineal"/>
+        </ComboBox>
+    </Grid>
+
+</Window>
