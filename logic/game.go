@@ -18,13 +18,7 @@ type Game struct {
 	Boards   []items.Board
 	Mode     string
 	Director bool
-}
-
-//Message .
-type Message struct {
-	Blower string
-	Ball   string
-	Bingo  string
+	Message  items.Message
 }
 
 //GUI .
@@ -36,6 +30,9 @@ type GUI struct {
 
 //ABC .
 var ABC string = "abcdefghijklmnopqrstuvwxyz"
+
+//Message .
+var Message items.Message
 
 //NewGame .
 func NewGame(listener string, writer string, numBoards int, mode string) Game {
@@ -57,9 +54,9 @@ func (g *Game) LoadGame(ctx echo.Context) error {
 	}
 	if res[0] == g.Protocol.GetWriterName() {
 		g.Director = true
-		g.LastContactPlayer(message)
+		g.WriteToPlayer(message)
 	} else {
-		g.LastContactPlayer(res)
+		g.WriteToPlayer(res)
 	}
 
 	//Board Name
@@ -76,12 +73,12 @@ func (g *Game) LoadGame(ctx echo.Context) error {
 			log.Fatal(err)
 		}
 	} else {
-		res, err = g.ListenPlayer()
+		res, err = g.ListenToPlayer()
 		if err != nil {
 			log.Fatal(err)
 		}
 		req := g.SetBoardName(res[0])
-		g.LastContactPlayer(req)
+		g.WriteToPlayer(req)
 	}
 
 	//GUI
@@ -91,9 +88,14 @@ func (g *Game) LoadGame(ctx echo.Context) error {
 	return ctx.JSON(200, gui)
 }
 
-//ListenPlayer .
-func (g *Game) ListenPlayer() ([]string, error) {
+//ListenToPlayer .
+func (g *Game) ListenToPlayer() ([]string, error) {
 	return g.Protocol.Listen()
+}
+
+//WriteToPlayer .
+func (g *Game) WriteToPlayer(message []string) {
+	g.Protocol.Write(message)
 }
 
 //ContactPlayer .
@@ -102,16 +104,11 @@ func (g *Game) ContactPlayer(message []string) ([]string, error) {
 	return res, err
 }
 
-//LastContactPlayer .
-func (g *Game) LastContactPlayer(message []string) {
-	g.Protocol.EndConversation(message)
-}
-
 //SetBoardName .
 func (g *Game) SetBoardName(nameTaken string) []string {
 	var name []string
-	name = append(name, "")
 	strings.Trim(ABC, nameTaken)
+	name = append(name, nameTaken)
 	for i, b := range g.Boards {
 		b.Name = string([]rune(ABC)[i])
 		name[0] = name[0] + string([]rune(ABC)[i])
@@ -119,43 +116,77 @@ func (g *Game) SetBoardName(nameTaken string) []string {
 	return name
 }
 
-//Validate .
-func (g *Game) Validate(messages []string) {
-	//llenar bingo
-	message := Message{messages[0], messages[1], messages[2]}
-	if message.Blower != g.Protocol.GetWriterName() {
-		if message.Ball != "bingo" {
-			if message.Ball != "null" {
-				var ball items.Ball
-				//convertir string a ball
-
-				row, column := g.Boards[0].Take(ball)
-				if g.Boards[0].CheckBoardLine(row, column) {
-				}
-
-				//Chequear si hay bingo
-				//Si hay bingo, concatenar
-			}
-		} else {
-			//Termino ronda, decir ganadores
-			//Hacer funcion que separe message[2]
-			//pasarlo a GGUI.Bingo
-		}
-
+//Init .
+func (g *Game) Init() {
+	if !g.Director {
+		g.Wait()
 	} else {
-		if message.Ball != "bingo" {
-			if message.Ball != "null" {
-				//Marcar tablero
-				//Chequear si hay bingo
-				//Si hay bingo, concatenar
+		time.Sleep(3 * time.Second)
+	}
+}
+
+//Update .
+func (g *Game) Update(ctx echo.Context) error {
+	var gui GUI
+	if g.Message.Finished != "true" {
+		if g.Director {
+			if g.Message.Bingo != "null" {
+				ball := g.Blower.GetBallOut()
+				g.Play(ball)
+				g.Message.SaveBall(ball)
+			} else {
+				g.Message.Finished = "true"
 			}
 		} else {
-			//Termino ronda, decir ganadores
-			//Hacer funcion que separe message[2]
-			//pasarlo a GGUI.Bingo
+			g.Play(g.Message.GetMessageBall())
 		}
-		//if hay bingo, ball = null,
-		//Sino sacar pelota
+	} else {
+		gui.Bingo = g.Message.GetMessageBingo()
 	}
-	//pasar mensaje
+	gui.Boards = g.Boards
+	gui.Ball = g.Message.GetMessageBall()
+	return ctx.JSON(200, gui)
+}
+
+//Play .
+func (g *Game) Play(ball items.Ball) {
+	bingo := false
+	for _, board := range g.Boards {
+		row, column := board.Take(ball)
+		if row != 1 && column != 1 {
+			if g.Mode == "lineal" {
+				bingo = board.CheckBoardLine(row, column)
+			} else {
+				bingo = board.CheckFull()
+			}
+			if bingo {
+				g.Message.SaveWinner(board.Name)
+			}
+		}
+	}
+}
+
+//SaveMessage .
+func (g *Game) SaveMessage(res []string) {
+	g.Message.Ball = res[0]
+	g.Message.Bingo = res[1]
+	g.Message.Finished = res[2]
+}
+
+//Send .
+func (g *Game) Send() {
+	var message []string
+	message[0] = g.Message.Ball
+	message[1] = g.Message.Bingo
+	message[2] = g.Message.Finished
+	g.WriteToPlayer(message)
+}
+
+//Wait .
+func (g *Game) Wait() {
+	res, err := g.ListenToPlayer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	g.SaveMessage(res)
 }
