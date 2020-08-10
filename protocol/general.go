@@ -35,7 +35,7 @@ func (p *Protocol) Converse(message []string) ([]string, error) {
 }
 
 //EndConversation .
-func (p *Protocol) EndConversation(lastMessage []string) {
+func (p *Protocol) Write(lastMessage []string) {
 	p.W.Writing(lastMessage)
 }
 
