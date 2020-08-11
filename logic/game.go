@@ -4,9 +4,9 @@ import (
 	"bingo-tokenring/logic/factories"
 	"bingo-tokenring/logic/items"
 	"bingo-tokenring/protocol"
+	"fmt"
 	"log"
 	"strings"
-	"time"
 )
 
 //Game .
@@ -56,13 +56,14 @@ func (g *Game) LoadGame() {
 		g.WriteToPlayer(res)
 	}
 	g.LoadBoard()
+
+	//TODO devolver gui
 }
 
 //LoadBoard .
 func (g *Game) LoadBoard() {
 	//Board Name
 	if g.Director {
-		time.Sleep(2 * time.Second)
 		name := g.SetBoardName("")
 		g.WriteToPlayer(name)
 		g.ListenToPlayer()
@@ -108,17 +109,15 @@ func (g *Game) SetBoardName(nameTaken string) []string {
 func (g *Game) Init() {
 	if !g.Director {
 		g.Wait()
-	} else {
-		time.Sleep(3 * time.Second)
 	}
 }
 
 //Update .
 func (g *Game) Update( /*ctx *gin.Context*/ ) {
 	var gui GUI
-	if g.Message.Finished != "true" {
+	if !g.Message.GetMessageFinished() {
 		if g.Director {
-			if g.Message.Bingo != "null" {
+			if g.Message.Bingo == "null" {
 				ball := g.Blower.GetBallOut()
 				g.Play(ball)
 				g.Message.SaveBall(ball)
@@ -131,24 +130,25 @@ func (g *Game) Update( /*ctx *gin.Context*/ ) {
 	} else {
 		gui.Bingo = g.Message.GetMessageBingo()
 	}
-	gui.Boards = g.Boards
 	gui.Ball = g.Message.GetMessageBall()
+	gui.Boards = g.Boards
+	fmt.Println(gui)
 	//ctx.JSON(200, gui)
 }
 
 //Play .
 func (g *Game) Play(ball items.Ball) {
 	bingo := false
-	for _, board := range g.Boards {
-		row, column := board.Take(ball)
-		if row != 1 && column != 1 {
+	for i := range g.Boards {
+		row, column := g.Boards[i].Take(ball)
+		if row != -1 && column != -1 {
 			if g.Mode == "lineal" {
-				bingo = board.CheckBoardLine(row, column)
+				bingo = g.Boards[i].CheckBoardLine(row, column)
 			} else {
-				bingo = board.CheckFull()
+				bingo = g.Boards[i].CheckFull()
 			}
 			if bingo {
-				g.Message.SaveWinner(board.Name)
+				g.Message.SaveWinner(g.Boards[i].Name)
 			}
 		}
 	}
@@ -156,10 +156,11 @@ func (g *Game) Play(ball items.Ball) {
 
 //Send .
 func (g *Game) Send() {
+	fmt.Println(g.Message)
 	var message []string
-	message[0] = g.Message.Ball
-	message[1] = g.Message.Bingo
-	message[2] = g.Message.Finished
+	message = append(message, g.Message.Ball)
+	message = append(message, g.Message.Bingo)
+	message = append(message, g.Message.Finished)
 	g.WriteToPlayer(message)
 }
 
