@@ -47,7 +47,7 @@ func (m *Message) SaveWinner(winner string) {
 	if m.Bingo == "null" {
 		m.Bingo = winner
 	} else {
-		m.Bingo += winner
+		m.Bingo += "," + winner
 	}
 }
 
