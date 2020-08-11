@@ -1,6 +1,8 @@
 package ports
 
 import (
+	"log"
+
 	"github.com/tarm/serial"
 )
 
@@ -23,6 +25,14 @@ func NewWriter(name string) (Writer, error) {
 //Close .
 func (w *Writer) Close() {
 	w.Sw.Close()
+}
+
+//Reset .
+func (w *Writer) Reset() {
+	err := (w.Sw).Flush()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //GetName .

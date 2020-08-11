@@ -1,6 +1,7 @@
 package ports
 
 import (
+	"log"
 	"strings"
 
 	"github.com/tarm/serial"
@@ -25,6 +26,14 @@ func NewListener(name string) (Listener, error) {
 //Close .
 func (l *Listener) Close() {
 	l.Sl.Close()
+}
+
+//Reset .
+func (l *Listener) Reset() {
+	err := (l.Sl).Flush()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //Listening .

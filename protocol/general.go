@@ -50,3 +50,9 @@ func (p *Protocol) Close() {
 	p.W.Close()
 
 }
+
+//Reset .
+func (p *Protocol) Reset() {
+	p.L.Reset()
+	p.W.Reset()
+}
