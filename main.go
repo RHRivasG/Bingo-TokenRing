@@ -11,6 +11,12 @@ import (
 )
 
 func main() {
+	//Parametros
+	// 1 -> TCP
+	// 2 -> Listener
+	// 3 -> Writer
+	// 4 -> Mode
+	// 5 -> Cartones
 
 	i, err := strconv.Atoi(os.Args[5])
 	if err != nil {
