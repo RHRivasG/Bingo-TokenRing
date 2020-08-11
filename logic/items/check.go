@@ -1,12 +1,9 @@
 package items
 
-import "fmt"
-
 //CheckColumn .
 func (board *Board) CheckColumn(column int, row int) bool {
 	if row != -1 {
 		if board.Tiles[row][column].Taken {
-			fmt.Println(row, column, board.Tiles[row][column].Taken)
 			return board.CheckColumn(column, row-1)
 		}
 		return false
@@ -18,7 +15,6 @@ func (board *Board) CheckColumn(column int, row int) bool {
 func (board *Board) CheckRow(column int, row int) bool {
 	if column != -1 {
 		if board.Tiles[row][column].Taken {
-			fmt.Println(row, column, board.Tiles[row][column].Taken)
 			return board.CheckRow(column-1, row)
 		}
 		return false
