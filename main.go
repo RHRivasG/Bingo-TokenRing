@@ -6,9 +6,11 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
+
+//G .
+var G logic.Game
 
 func main() {
 	//Parametros
@@ -17,33 +19,33 @@ func main() {
 	// 3 -> Writer
 	// 4 -> Mode
 	// 5 -> Cartones
-
 	i, err := strconv.Atoi(os.Args[5])
 	if err != nil {
 		log.Fatal(err)
 	}
-	g := logic.NewGame(os.Args[2], os.Args[3], i, os.Args[4])
+	G = logic.NewGame(os.Args[2], os.Args[3], i, os.Args[4])
 	r := gin.Default()
-	r.Use(cors.Default())
-
+	//r.Use(cors.Default())
+	//G.LoadGame()
+	defer G.Close()
 	//Routes
 	r.GET("init", func(ctx *gin.Context) {
-		g.Init()
+		G.Init()
 	})
 	r.GET("loadgame", func(ctx *gin.Context) {
-		g.LoadGame(ctx)
+		G.LoadGame(ctx)
 	})
-	r.GET("update", func(ctx *gin.Context) {
-		g.Update(ctx)
+	r.GET("updategame", func(ctx *gin.Context) {
+		G.Update(ctx)
 	})
 	r.GET("send", func(ctx *gin.Context) {
-		g.Send()
+		G.Send()
 	})
 	r.GET("wait", func(ctx *gin.Context) {
-		g.Wait()
+		G.Wait()
 	})
 	r.GET("close", func(ctx *gin.Context) {
-		g.Close()
+		G.Close()
 	})
 
 	r.Run(":" + os.Args[1])
@@ -80,5 +82,5 @@ func main() {
 			fmt.Println(g.Message)
 			g.Send()
 		}
-		g.Close()*/
+		defer g.close()*/
 }
