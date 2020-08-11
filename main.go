@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +26,7 @@ func main() {
 	}
 	G = logic.NewGame(os.Args[2], os.Args[3], i, os.Args[4])
 	r := gin.Default()
-	//r.Use(cors.Default())
+	r.Use(cors.Default())
 	//G.LoadGame()
 	defer G.Close()
 	//Routes
