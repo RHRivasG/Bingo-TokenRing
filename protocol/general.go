@@ -34,7 +34,7 @@ func (p *Protocol) Converse(message []string) ([]string, error) {
 	return p.L.Listening()
 }
 
-//EndConversation .
+//Write .
 func (p *Protocol) Write(lastMessage []string) {
 	p.W.Writing(lastMessage)
 }
@@ -42,4 +42,11 @@ func (p *Protocol) Write(lastMessage []string) {
 //GetWriterName .
 func (p *Protocol) GetWriterName() string {
 	return p.W.GetName()
+}
+
+//Close .
+func (p *Protocol) Close() {
+	p.L.Close()
+	p.W.Close()
+
 }

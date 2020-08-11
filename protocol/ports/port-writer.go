@@ -20,6 +20,11 @@ func NewWriter(name string) (Writer, error) {
 	return Writer{name, sw}, nil
 }
 
+//Close .
+func (w *Writer) Close() {
+	w.Sw.Close()
+}
+
 //GetName .
 func (w *Writer) GetName() string {
 	return w.Name

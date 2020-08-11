@@ -22,6 +22,11 @@ func NewListener(name string) (Listener, error) {
 	return Listener{name, sl}, nil
 }
 
+//Close .
+func (l *Listener) Close() {
+	l.Sl.Close()
+}
+
 //Listening .
 func (l *Listener) Listening() ([]string, error) {
 	buf := make([]byte, 128)
