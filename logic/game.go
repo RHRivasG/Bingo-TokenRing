@@ -7,8 +7,6 @@ import (
 	"log"
 	"strings"
 	"time"
-
-	"github.com/labstack/echo"
 )
 
 //Game .
@@ -31,20 +29,20 @@ type GUI struct {
 //ABC .
 var ABC string = "abcdefghijklmnopqrstuvwxyz"
 
-//Message .
-var Message items.Message
-
 //NewGame .
 func NewGame(listener string, writer string, numBoards int, mode string) Game {
 	var game Game
 	game.Protocol, game.Boards, game.Blower = factories.BingoFactory(listener, writer, numBoards)
 	game.Mode = mode
 	game.Director = false
+	game.Message.Ball = "null"
+	game.Message.Bingo = "null"
+	game.Message.Finished = "false"
 	return game
 }
 
 //LoadGame .
-func (g *Game) LoadGame(ctx echo.Context) error {
+func (g *Game) LoadGame() {
 	//Director
 	var message []string
 	message = append(message, g.Protocol.GetWriterName())
@@ -54,38 +52,28 @@ func (g *Game) LoadGame(ctx echo.Context) error {
 	}
 	if res[0] == g.Protocol.GetWriterName() {
 		g.Director = true
-		g.WriteToPlayer(message)
 	} else {
 		g.WriteToPlayer(res)
 	}
+	g.LoadBoard()
+}
 
+//LoadBoard .
+func (g *Game) LoadBoard() {
 	//Board Name
-	var name []string
-	name = append(name, "")
 	if g.Director {
-		time.Sleep(3 * time.Second)
-		for i := 0; i < len(g.Boards); i++ {
-			name[0] = name[0] + string([]rune(ABC)[i])
-		}
-		g.SetBoardName(name[0])
-		res, err = g.ContactPlayer(name)
-		if err != nil {
-			log.Fatal(err)
-		}
+		time.Sleep(2 * time.Second)
+		name := g.SetBoardName("")
+		g.WriteToPlayer(name)
+		g.ListenToPlayer()
 	} else {
-		res, err = g.ListenToPlayer()
+		res, err := g.ListenToPlayer()
 		if err != nil {
 			log.Fatal(err)
 		}
-		req := g.SetBoardName(res[0])
-		g.WriteToPlayer(req)
+		name := g.SetBoardName(res[0])
+		g.WriteToPlayer(name)
 	}
-
-	//GUI
-	var gui GUI
-	gui.Boards = g.Boards
-
-	return ctx.JSON(200, gui)
 }
 
 //ListenToPlayer .
@@ -107,10 +95,10 @@ func (g *Game) ContactPlayer(message []string) ([]string, error) {
 //SetBoardName .
 func (g *Game) SetBoardName(nameTaken string) []string {
 	var name []string
-	strings.Trim(ABC, nameTaken)
+	ABC = strings.Trim(ABC, nameTaken)
 	name = append(name, nameTaken)
-	for i, b := range g.Boards {
-		b.Name = string([]rune(ABC)[i])
+	for i := range g.Boards {
+		g.Boards[i].Name = string([]rune(ABC)[i])
 		name[0] = name[0] + string([]rune(ABC)[i])
 	}
 	return name
@@ -126,7 +114,7 @@ func (g *Game) Init() {
 }
 
 //Update .
-func (g *Game) Update(ctx echo.Context) error {
+func (g *Game) Update( /*ctx *gin.Context*/ ) {
 	var gui GUI
 	if g.Message.Finished != "true" {
 		if g.Director {
@@ -145,7 +133,7 @@ func (g *Game) Update(ctx echo.Context) error {
 	}
 	gui.Boards = g.Boards
 	gui.Ball = g.Message.GetMessageBall()
-	return ctx.JSON(200, gui)
+	//ctx.JSON(200, gui)
 }
 
 //Play .
@@ -166,13 +154,6 @@ func (g *Game) Play(ball items.Ball) {
 	}
 }
 
-//SaveMessage .
-func (g *Game) SaveMessage(res []string) {
-	g.Message.Ball = res[0]
-	g.Message.Bingo = res[1]
-	g.Message.Finished = res[2]
-}
-
 //Send .
 func (g *Game) Send() {
 	var message []string
@@ -188,5 +169,10 @@ func (g *Game) Wait() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	g.SaveMessage(res)
+	g.Message.SaveMessage(res)
+}
+
+//Close .
+func (g *Game) Close() {
+	g.Protocol.Close()
 }
