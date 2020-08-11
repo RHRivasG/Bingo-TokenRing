@@ -49,3 +49,10 @@ func (m *Message) SaveWinner(winner string) {
 func (m *Message) SaveBall(ball Ball) {
 	m.Ball = ball.Letter + strconv.Itoa(ball.Number)
 }
+
+//SaveMessage .
+func (m *Message) SaveMessage(res []string) {
+	m.Ball = res[0]
+	m.Bingo = res[1]
+	m.Finished = res[2]
+}
