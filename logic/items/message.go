@@ -1,6 +1,7 @@
 package items
 
 import (
+	"log"
 	"strconv"
 	"strings"
 )
@@ -16,7 +17,12 @@ type Message struct {
 func (m *Message) GetMessageBall() Ball {
 	message := m.Ball
 	var ball Ball
+	var err error
 	ball.Letter = string([]rune(message)[0])
+	ball.Number, err = strconv.Atoi(strings.Trim(message, ball.Letter))
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ball
 }
 
