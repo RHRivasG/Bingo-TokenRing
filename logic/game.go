@@ -44,6 +44,7 @@ func NewGame(listener string, writer string, numBoards int, mode string) Game {
 
 //LoadGame .
 func (g *Game) LoadGame(ctx *gin.Context) {
+	g.Protocol.Reset()
 	//Director
 	var message []string
 	message = append(message, g.Protocol.GetWriterName())
@@ -108,10 +109,12 @@ func (g *Game) SetBoardName(nameTaken string) []string {
 }
 
 //Init .
-func (g *Game) Init() {
+func (g *Game) Init( /*ctx *gin.Context*/ ) {
+	g.Protocol.Reset()
 	if !g.Director {
 		g.Wait()
 	}
+	//ctx.JSON(http.StatusOK, "OK")
 }
 
 //Update .
@@ -126,7 +129,7 @@ func (g *Game) Update(ctx *gin.Context) {
 			} else {
 				g.Message.Finished = "true"
 			}
-		} else {
+		} else if g.Message.Ball != "null" {
 			g.Play(g.Message.GetMessageBall())
 		}
 	} else {
@@ -156,24 +159,29 @@ func (g *Game) Play(ball items.Ball) {
 }
 
 //Send .
-func (g *Game) Send() {
+func (g *Game) Send( /*ctx *gin.Context*/ ) {
 	var message []string
+	g.Protocol.Reset()
 	message = append(message, g.Message.Ball)
 	message = append(message, g.Message.Bingo)
 	message = append(message, g.Message.Finished)
 	g.WriteToPlayer(message)
+	g.Protocol.Reset()
+	//ctx.JSON(http.StatusOK, "OK")
 }
 
 //Wait .
-func (g *Game) Wait() {
+func (g *Game) Wait( /*ctx *gin.Context*/ ) {
 	res, err := g.ListenToPlayer()
 	if err != nil {
 		log.Fatal(err)
 	}
 	g.Message.SaveMessage(res)
+	//ctx.JSON(http.StatusOK, "OK")
 }
 
 //Close .
-func (g *Game) Close() {
+func (g *Game) Close( /*ctx *gin.Context*/ ) {
 	g.Protocol.Close()
+	//ctx.JSON(http.StatusOK, "OK")
 }
