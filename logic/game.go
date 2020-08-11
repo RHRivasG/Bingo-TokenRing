@@ -4,9 +4,10 @@ import (
 	"bingo-tokenring/logic/factories"
 	"bingo-tokenring/logic/items"
 	"bingo-tokenring/protocol"
-	"fmt"
 	"log"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 //Game .
@@ -42,7 +43,7 @@ func NewGame(listener string, writer string, numBoards int, mode string) Game {
 }
 
 //LoadGame .
-func (g *Game) LoadGame() {
+func (g *Game) LoadGame(ctx *gin.Context) {
 	//Director
 	var message []string
 	message = append(message, g.Protocol.GetWriterName())
@@ -56,8 +57,9 @@ func (g *Game) LoadGame() {
 		g.WriteToPlayer(res)
 	}
 	g.LoadBoard()
-
-	//TODO devolver gui
+	var gui GUI
+	gui.Boards = g.Boards
+	ctx.JSON(200, gui)
 }
 
 //LoadBoard .
@@ -113,7 +115,7 @@ func (g *Game) Init() {
 }
 
 //Update .
-func (g *Game) Update( /*ctx *gin.Context*/ ) {
+func (g *Game) Update(ctx *gin.Context) {
 	var gui GUI
 	if !g.Message.GetMessageFinished() {
 		if g.Director {
@@ -132,8 +134,7 @@ func (g *Game) Update( /*ctx *gin.Context*/ ) {
 	}
 	gui.Ball = g.Message.GetMessageBall()
 	gui.Boards = g.Boards
-	fmt.Println(gui)
-	//ctx.JSON(200, gui)
+	ctx.JSON(200, gui)
 }
 
 //Play .
@@ -156,7 +157,6 @@ func (g *Game) Play(ball items.Ball) {
 
 //Send .
 func (g *Game) Send() {
-	fmt.Println(g.Message)
 	var message []string
 	message = append(message, g.Message.Ball)
 	message = append(message, g.Message.Bingo)
