@@ -14,7 +14,7 @@ func BingoFactory(listener string, writer string, numBoards int) (protocol.Proto
 	}
 	var boards []items.Board
 	for i := 0; i < numBoards; i++ {
-		boards[i] = items.NewBoard("")
+		boards = append(boards, items.NewBoard(""))
 	}
 	blower := items.NewBlower()
 	return protocol, boards, blower
