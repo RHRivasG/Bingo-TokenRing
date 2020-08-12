@@ -2,6 +2,7 @@ package items
 
 import (
 	"math/rand"
+	"time"
 )
 
 //Blower .
@@ -23,7 +24,9 @@ func NewBlower() Blower {
 
 //GetBallOut .
 func (b *Blower) GetBallOut() Ball {
-	n := rand.Intn(len(b.Balls))
+	s := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(s)
+	n := r.Intn(len(b.Balls))
 	ball := b.Balls[n]
 	b.Balls = remove(b.Balls, n)
 	return ball
