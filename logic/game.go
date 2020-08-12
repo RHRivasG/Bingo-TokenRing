@@ -6,8 +6,6 @@ import (
 	"bingo-tokenring/protocol"
 	"log"
 	"strings"
-
-	"github.com/gin-gonic/gin"
 )
 
 //Game .
@@ -43,7 +41,7 @@ func NewGame(listener string, writer string, numBoards int, mode string) Game {
 }
 
 //LoadGame .
-func (g *Game) LoadGame(ctx *gin.Context) {
+func (g *Game) LoadGame() GUI {
 	g.Protocol.Reset()
 	//Director
 	var message []string
@@ -60,7 +58,7 @@ func (g *Game) LoadGame(ctx *gin.Context) {
 	g.LoadBoard()
 	var gui GUI
 	gui.Boards = g.Boards
-	ctx.JSON(200, gui)
+	return gui
 }
 
 //LoadBoard .
@@ -118,7 +116,7 @@ func (g *Game) Init( /*ctx *gin.Context*/ ) {
 }
 
 //Update .
-func (g *Game) Update(ctx *gin.Context) {
+func (g *Game) Update() GUI {
 	var gui GUI
 	if !g.Message.GetMessageFinished() {
 		if g.Director {
@@ -137,7 +135,7 @@ func (g *Game) Update(ctx *gin.Context) {
 	}
 	gui.Ball = g.Message.GetMessageBall()
 	gui.Boards = g.Boards
-	ctx.JSON(200, gui)
+	return gui
 }
 
 //Play .
