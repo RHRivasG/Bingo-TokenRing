@@ -2,12 +2,14 @@ package main
 
 import (
 	"bingo-tokenring/logic"
+	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"strconv"
+	"time"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"github.com/fatih/color"
 )
 
 //G .
@@ -25,63 +27,52 @@ func main() {
 		log.Fatal(err)
 	}
 	G = logic.NewGame(os.Args[2], os.Args[3], i, os.Args[4])
-	r := gin.Default()
-	r.Use(cors.Default())
-	//G.LoadGame()
-	defer G.Close()
-	//Routes
-	r.GET("init", func(ctx *gin.Context) {
-		G.Init()
-	})
-	r.GET("loadgame", func(ctx *gin.Context) {
-		G.LoadGame(ctx)
-	})
-	r.GET("updategame", func(ctx *gin.Context) {
-		G.Update(ctx)
-	})
-	r.GET("send", func(ctx *gin.Context) {
+	gui := G.LoadGame()
+	RunGame(gui)
+	G.Init()
+	//var b []byte = make([]byte, 1)
+	for len(gui.Bingo) == 0 {
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		gui = G.Update()
+		RunGame(gui)
+		fmt.Println()
+		fmt.Println("Cartones ganadores: ", gui.Bingo)
+		//os.Stdin.Read(b)
+		time.Sleep(1 * time.Second)
+		//Read()
 		G.Send()
-	})
-	r.GET("wait", func(ctx *gin.Context) {
 		G.Wait()
-	})
-	r.GET("close", func(ctx *gin.Context) {
-		G.Close()
-	})
 
-	r.Run(":" + os.Args[1])
-	/*
-		g := logic.NewGame(os.Args[2], os.Args[3], 2, "lineal")
-		g.Boards[0].Tiles[0][3].Taken = true
-		g.Boards[0].Tiles[1][3].Taken = true
-		g.Boards[0].Tiles[2][3].Taken = true
-		g.Boards[0].Tiles[3][3].Taken = true
-		g.Boards[0].Tiles[4][3].Taken = true
-		g.Boards[1].Tiles[0][3].Taken = true
-		g.Boards[1].Tiles[1][3].Taken = true
-		g.Boards[1].Tiles[2][3].Taken = true
-		g.Boards[1].Tiles[3][3].Taken = true
-		g.Boards[1].Tiles[4][3].Taken = true
-		g.LoadGame()
-		g.Init()
-		if g.Director {
-			g.Update()
-			fmt.Println(g.Message)
-			g.Send()
-			g.Wait()
-			g.Update()
-			fmt.Println(g.Message)
-			g.Send()
+	}
+	defer G.Close()
+}
 
-		} else {
-			fmt.Println(g.Message)
-			g.Update()
-			fmt.Println(g.Message)
-			g.Send()
-			g.Wait()
-			g.Update()
-			fmt.Println(g.Message)
-			g.Send()
+//RunGame .
+func RunGame(g logic.GUI) {
+	var valor string
+	fmt.Println("Pelota: ", g.Ball.Letter, g.Ball.Number)
+	for _, board := range g.Boards {
+		fmt.Println("Carton: ", board.Name)
+		color.Yellow(" [B ]  [I ]  [N ]  [G ]  [O ]")
+		for i := 0; i < 5; i++ {
+			for j := 0; j < 5; j++ {
+				valor = strconv.Itoa(board.Tiles[i][j].Number)
+				if board.Tiles[i][j].Number < 10 {
+					valor = "0" + valor
+				}
+				if board.Tiles[i][j].Taken {
+					c := color.New(color.FgCyan).Add(color.Underline)
+					c.Print(" [", valor, "] ")
+				} else {
+
+					fmt.Print(" [", valor, "] ")
+				}
+			}
+			fmt.Println()
 		}
-		defer g.close()*/
+		fmt.Println()
+	}
+
 }
